@@ -181,18 +181,19 @@ export async function POST(req: Request) {
     return unauthorizedResponse();
   }
 
-  const { messages } = await req.json();
+  try {
+    const { messages } = await req.json();
 
-  // Convert messages to Anthropic format
-  const anthropicMessages: Anthropic.MessageParam[] = messages.map(
-    (msg: { role: string; content: string }) => ({
-      role: msg.role as "user" | "assistant",
-      content: msg.content,
-    })
-  );
+    // Convert messages to Anthropic format
+    const anthropicMessages: Anthropic.MessageParam[] = messages.map(
+      (msg: { role: string; content: string }) => ({
+        role: msg.role as "user" | "assistant",
+        content: msg.content,
+      })
+    );
 
-  // Create initial response
-  let response = await getAnthropic().messages.create({
+    // Create initial response
+    let response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 4096,
     system: SYSTEM_PROMPT,
@@ -256,9 +257,17 @@ export async function POST(req: Request) {
 
   const toolResults = allContent.filter((c) => c.type === "tool_result");
 
-  return Response.json({
-    role: "assistant",
-    content: textContent,
-    toolResults,
-  });
+    return Response.json({
+      role: "assistant",
+      content: textContent,
+      toolResults,
+    });
+  } catch (error) {
+    console.error("Chat API error:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return Response.json(
+      { error: `Chat failed: ${message}` },
+      { status: 500 }
+    );
+  }
 }

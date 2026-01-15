@@ -75,11 +75,11 @@ export function ChatContainer() {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
 
       // Add assistant message
       const assistantMessage: Message = {
@@ -114,13 +114,14 @@ export function ChatContainer() {
       }
     } catch (error) {
       console.error("Chat error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       // Add error message
       setMessages([
         ...newMessages,
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: "Sorry, something went wrong. Please try again.",
+          content: `Sorry, something went wrong: ${errorMessage}`,
         },
       ]);
     } finally {
