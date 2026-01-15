@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-serif: Georgia, Cambria, "Times New Roman", serif;
+  --font-family-sans: Inter, system-ui, sans-serif;
+
+  --color-newspaper-bg: #faf9f6;
+  --color-newspaper-text: #1a1a1a;
+  --color-newspaper-muted: #6b6b6b;
+  --color-newspaper-border: #e5e5e5;
+  --color-newspaper-accent: #0066cc;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--color-newspaper-bg);
+  color: var(--color-newspaper-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-serif);
+}

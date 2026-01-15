@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:exa.ai)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(./node_modules/.bin/tailwindcss:*)",
+      "Bash(npm ls:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}
