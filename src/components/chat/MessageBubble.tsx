@@ -136,22 +136,9 @@ function ToolResult({ invocation, onOptionSelect, isLatest }: ToolResultProps) {
     );
   }
 
-  if (invocation.toolName === "extractTopics" && result.topics) {
-    return (
-      <div className="mt-3 pt-3 border-t border-newspaper-border/30">
-        <div className="text-sm font-medium mb-2">Topics identified:</div>
-        <div className="flex flex-wrap gap-2">
-          {result.topics.map((topic) => (
-            <span
-              key={topic.id}
-              className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
-            >
-              {topic.name}
-            </span>
-          ))}
-        </div>
-      </div>
-    );
+  // Don't show extractTopics results - topics appear in sidebar
+  if (invocation.toolName === "extractTopics") {
+    return null;
   }
 
   if (invocation.toolName === "searchContent" && result.articles) {

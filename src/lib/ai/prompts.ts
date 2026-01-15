@@ -9,7 +9,8 @@ export const SYSTEM_PROMPT = `You are a personalized news curator helping users 
 
 ### When user responds to a follow-up:
 1. Call extractTopics to save their refined preferences
-2. Ask another follow-up to go deeper OR suggest related topics they might like
+2. ALWAYS call askFollowUp to offer related topics or more refinement options
+3. Include an "I'm all set" option so user can end when ready
 
 ## USING askFollowUp
 Always use allowMultiple=true. Present 4-5 options with SHORT labels (2-3 words max).
