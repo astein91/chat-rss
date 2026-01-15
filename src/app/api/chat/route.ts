@@ -177,19 +177,23 @@ async function executeToolCall(
 }
 
 export async function POST(req: Request) {
-  if (!validateRequest(req)) {
-    return unauthorizedResponse();
-  }
-
-  // Check for API key before attempting to use the API
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json(
-      { error: "ANTHROPIC_API_KEY is not configured" },
-      { status: 500 }
-    );
-  }
-
+  console.log("Chat API called");
   try {
+    console.log("Checking rate limit...");
+    if (!validateRequest(req)) {
+      return unauthorizedResponse();
+    }
+
+    console.log("Checking API key...");
+    // Check for API key before attempting to use the API
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return Response.json(
+        { error: "ANTHROPIC_API_KEY is not configured" },
+        { status: 500 }
+      );
+    }
+
+    console.log("Parsing request body...");
     const { messages } = await req.json();
 
     // Convert messages to Anthropic format
@@ -200,6 +204,7 @@ export async function POST(req: Request) {
       })
     );
 
+    console.log("Calling Anthropic API...");
     // Create initial response
     let response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-20250514",
