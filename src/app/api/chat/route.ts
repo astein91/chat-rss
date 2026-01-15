@@ -181,6 +181,14 @@ export async function POST(req: Request) {
     return unauthorizedResponse();
   }
 
+  // Check for API key before attempting to use the API
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return Response.json(
+      { error: "ANTHROPIC_API_KEY is not configured" },
+      { status: 500 }
+    );
+  }
+
   try {
     const { messages } = await req.json();
 
