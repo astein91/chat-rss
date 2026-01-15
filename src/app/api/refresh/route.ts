@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const searchPromises = activeTopics.map((topic) =>
     searchExa(topic.searchQueries[0], {
       category: topic.category as ExaCategory,
-      numResults: 5,
+      numResults: 10,
       dateRange: topic.dateRange || "2days",
     }).catch((error) => {
       console.error(`Search failed for "${topic.searchQueries[0]}":`, error);
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   const allArticles: Article[] = [];
   for (let i = 0; i < filteredResults.length; i++) {
     const topic = activeTopics[i];
-    const articles = filteredResults[i].slice(0, 3).map((r) => transformToArticle(r, [topic.id]));
+    const articles = filteredResults[i].slice(0, 5).map((r) => transformToArticle(r, [topic.id]));
     allArticles.push(...articles);
   }
 
