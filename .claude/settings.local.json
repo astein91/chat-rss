@@ -12,7 +12,10 @@
       "Bash(wc:*)",
       "Bash(npm run build:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)"
     ]
   }
 }

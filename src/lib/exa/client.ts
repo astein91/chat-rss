@@ -120,9 +120,9 @@ export async function filterAndEnhanceResults(
 ): Promise<SearchResult[]> {
   if (results.length === 0) return [];
 
-  const prompt = `You are filtering search results for a user interested in: "${userInterest}"
+  const prompt = `You are strictly filtering search results for a user interested in: "${userInterest}"
 
-Here are the articles found:
+Here are the URLs found:
 ${results.map((r, i) => `
 [${i}]
 URL: ${r.url}
@@ -131,25 +131,30 @@ Summary: ${r.summary}
 Source: ${r.source}
 `).join("\n")}
 
-For each article, evaluate:
-1. Is this a specific article/post (NOT a general website, category page, or homepage)?
-2. Is it genuinely relevant to "${userInterest}"?
-3. Is it from a quality source with actual content?
+STRICT FILTERING RULES - EXCLUDE if ANY of these apply:
+1. NOT a written article, blog post, or research paper (EXCLUDE scores, standings, schedules, live feeds, forums, product pages, documentation, landing pages)
+2. Paywalled content (Wall Street Journal, NYT, The Athletic, Bloomberg, Financial Times, etc. - EXCLUDE unless clearly free)
+3. Category pages, tag pages, search results, or index pages (EXCLUDE)
+4. Video-only content, podcasts, or image galleries (EXCLUDE)
+5. Social media posts, tweets, or Reddit threads (EXCLUDE)
+6. Press releases or sponsored content (EXCLUDE)
+7. Not genuinely relevant to "${userInterest}" (EXCLUDE)
 
-Return ONLY the articles that pass ALL criteria. For each passing article, provide:
-- The original URL (exactly as given)
-- A compelling title (can rewrite for clarity, max 100 chars)
-- A one-sentence "why interesting" summary explaining why this specific article matters for someone interested in ${userInterest}
+ONLY INCLUDE: News articles, blog posts, research papers, analysis pieces, opinion/editorial pieces with substantial written content.
+
+For each article that passes ALL filters, provide:
+- url: The exact original URL
+- title: A clear title (max 100 chars)
+- whyInteresting: One sentence on why this matters for someone interested in ${userInterest}
 
 Respond with valid JSON only:
 {
   "articles": [
-    {"url": "...", "title": "...", "whyInteresting": "..."},
-    ...
+    {"url": "...", "title": "...", "whyInteresting": "..."}
   ]
 }
 
-If no articles pass the quality filter, return {"articles": []}`;
+If NO articles pass the strict filter, return {"articles": []}. Be aggressive in filtering - quality over quantity.`;
 
   try {
     // Use Haiku for fast filtering
