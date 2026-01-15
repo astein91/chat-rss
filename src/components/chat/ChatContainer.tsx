@@ -26,9 +26,30 @@ interface Message {
 }
 
 export function ChatContainer() {
-  const { addTopic, addArticles } = useFeedStore();
+  const { addTopic, addArticles, setArticles } = useFeedStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingArticles, setIsFetchingArticles] = useState(false);
+
+  // Fetch articles for newly added topics
+  const fetchArticlesForTopics = async (topics: Topic[]) => {
+    setIsFetchingArticles(true);
+    try {
+      const response = await fetch("/api/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topics }),
+      });
+      const data = await response.json();
+      if (data.success && data.articles) {
+        setArticles(data.articles);
+      }
+    } catch (error) {
+      console.error("Failed to fetch articles:", error);
+    } finally {
+      setIsFetchingArticles(false);
+    }
+  };
 
   const handleSend = useCallback(async (content: string) => {
     // Add user message
@@ -72,15 +93,23 @@ export function ChatContainer() {
 
       // Process tool results
       if (data.toolResults) {
+        const newTopics: Topic[] = [];
+
         for (const result of data.toolResults) {
           if (result.toolName === "extractTopics" && result.toolResult?.topics) {
             for (const topic of result.toolResult.topics) {
               addTopic(topic);
+              newTopics.push(topic);
             }
           }
           if (result.toolName === "searchContent" && result.toolResult?.articles) {
             addArticles(result.toolResult.articles);
           }
+        }
+
+        // Auto-fetch articles after topics are extracted
+        if (newTopics.length > 0) {
+          fetchArticlesForTopics(newTopics);
         }
       }
     } catch (error) {
@@ -127,6 +156,13 @@ export function ChatContainer() {
         isLoading={isLoading}
         onOptionSelect={handleOptionSelect}
       />
+      {isFetchingArticles && (
+        <div className="px-4 py-3 bg-blue-50 border-t border-blue-100 text-center">
+          <span className="text-sm text-blue-600">
+            Finding articles for you...
+          </span>
+        </div>
+      )}
       <ChatInput onSend={handleSend} isLoading={isLoading} />
     </div>
   );
