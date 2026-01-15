@@ -171,7 +171,7 @@ If NO articles pass the strict filter, return {"articles": []}. Be aggressive in
   try {
     // Use Haiku for fast filtering
     const response = await getAnthropic().messages.create({
-      model: "claude-3-5-haiku-20241022",
+      model: "claude-haiku-4-5-20251016",
       max_tokens: 2048,
       messages: [{ role: "user", content: prompt }],
     });

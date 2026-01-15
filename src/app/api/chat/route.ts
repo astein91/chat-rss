@@ -207,7 +207,7 @@ export async function POST(req: Request) {
     console.log("Calling Anthropic API...");
     // Create initial response - using Haiku for speed (Vercel Hobby has 10s limit)
     let response = await getAnthropic().messages.create({
-    model: "claude-3-5-haiku-20241022",
+    model: "claude-haiku-4-5-20251016",
     max_tokens: 1024,
     system: SYSTEM_PROMPT,
     tools,
@@ -243,7 +243,7 @@ export async function POST(req: Request) {
 
     // Continue conversation with tool results
     response = await getAnthropic().messages.create({
-      model: "claude-3-5-haiku-20241022",
+      model: "claude-haiku-4-5-20251016",
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       tools,
