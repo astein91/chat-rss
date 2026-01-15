@@ -6,7 +6,14 @@ import type { Topic, Article, ExaCategory } from "@/types";
 
 export const maxDuration = 60;
 
-const anthropic = new Anthropic();
+// Lazy initialization to avoid build-time errors
+let anthropic: Anthropic | null = null;
+function getAnthropic() {
+  if (!anthropic) {
+    anthropic = new Anthropic();
+  }
+  return anthropic;
+}
 
 const tools: Anthropic.Tool[] = [
   {
@@ -185,7 +192,7 @@ export async function POST(req: Request) {
   );
 
   // Create initial response
-  let response = await anthropic.messages.create({
+  let response = await getAnthropic().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 4096,
     system: SYSTEM_PROMPT,
@@ -221,7 +228,7 @@ export async function POST(req: Request) {
     }
 
     // Continue conversation with tool results
-    response = await anthropic.messages.create({
+    response = await getAnthropic().messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
       system: SYSTEM_PROMPT,

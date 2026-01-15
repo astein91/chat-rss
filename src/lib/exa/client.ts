@@ -2,9 +2,22 @@ import Exa from "exa-js";
 import Anthropic from "@anthropic-ai/sdk";
 import type { ExaCategory, Article } from "@/types";
 
-const anthropic = new Anthropic();
+// Lazy initialization to avoid build-time errors
+let anthropic: Anthropic | null = null;
+function getAnthropic() {
+  if (!anthropic) {
+    anthropic = new Anthropic();
+  }
+  return anthropic;
+}
 
-const exa = new Exa(process.env.EXA_API_KEY!);
+let exa: Exa | null = null;
+function getExa() {
+  if (!exa) {
+    exa = new Exa(process.env.EXA_API_KEY!);
+  }
+  return exa;
+}
 
 function getStartDate(dateRange: "day" | "2days" | "week" | "month"): string {
   const now = new Date();
@@ -61,7 +74,7 @@ export async function searchExa(
 
   try {
     // Request extra results since we'll filter out non-articles
-    const searchOptions: Parameters<typeof exa.searchAndContents>[1] = {
+    const searchOptions: Parameters<Exa["searchAndContents"]>[1] = {
       type: "auto",
       numResults: numResults + 5,
       startPublishedDate: getStartDate(dateRange),
@@ -74,7 +87,7 @@ export async function searchExa(
       searchOptions.category = category;
     }
 
-    const results = await exa.searchAndContents(query, searchOptions);
+    const results = await getExa().searchAndContents(query, searchOptions);
 
     // Cast to include summary and highlights which are returned when those options are specified
     type ExaResultWithExtras = (typeof results.results)[number] & {
@@ -157,7 +170,7 @@ If NO articles pass the strict filter, return {"articles": []}. Be aggressive in
 
   try {
     // Use Haiku for fast filtering
-    const response = await anthropic.messages.create({
+    const response = await getAnthropic().messages.create({
       model: "claude-3-5-haiku-20241022",
       max_tokens: 2048,
       messages: [{ role: "user", content: prompt }],
