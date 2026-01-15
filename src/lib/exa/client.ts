@@ -133,12 +133,11 @@ Source: ${r.source}
 
 STRICT FILTERING RULES - EXCLUDE if ANY of these apply:
 1. NOT a written article, blog post, or research paper (EXCLUDE scores, standings, schedules, live feeds, forums, product pages, documentation, landing pages)
-2. Paywalled content (Wall Street Journal, NYT, The Athletic, Bloomberg, Financial Times, etc. - EXCLUDE unless clearly free)
-3. Category pages, tag pages, search results, or index pages (EXCLUDE)
-4. Video-only content, podcasts, or image galleries (EXCLUDE)
-5. Social media posts, tweets, or Reddit threads (EXCLUDE)
-6. Press releases or sponsored content (EXCLUDE)
-7. Not genuinely relevant to "${userInterest}" (EXCLUDE)
+2. Category pages, tag pages, search results, or index pages (EXCLUDE)
+3. Video-only content, podcasts, or image galleries (EXCLUDE)
+4. Social media posts, tweets, or Reddit threads (EXCLUDE)
+5. Press releases or sponsored content (EXCLUDE)
+6. Not genuinely relevant to "${userInterest}" (EXCLUDE)
 
 ONLY INCLUDE: News articles, blog posts, research papers, analysis pieces, opinion/editorial pieces with substantial written content.
 
