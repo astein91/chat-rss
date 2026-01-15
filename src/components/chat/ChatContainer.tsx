@@ -99,9 +99,10 @@ export function ChatContainer() {
     }
   }, [messages, addTopic, addArticles]);
 
-  const handleOptionSelect = useCallback((option: FollowUpOption) => {
-    // Send the selected option as a user message
-    handleSend(option.value);
+  const handleOptionSelect = useCallback((options: FollowUpOption[]) => {
+    // Combine selected options into a single message
+    const message = options.map((o) => o.value).join(". ");
+    handleSend(message);
   }, [handleSend]);
 
   // Convert to format expected by MessageList

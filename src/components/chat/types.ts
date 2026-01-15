@@ -14,6 +14,7 @@ export interface ToolInvocation {
     articles?: Article[];
     question?: string;
     options?: FollowUpOption[];
+    allowMultiple?: boolean;
     message: string;
   };
 }

@@ -7,7 +7,7 @@ import type { ChatMessageUI, FollowUpOption } from "./types";
 interface MessageListProps {
   messages: ChatMessageUI[];
   isLoading: boolean;
-  onOptionSelect?: (option: FollowUpOption) => void;
+  onOptionSelect?: (options: FollowUpOption[]) => void;
 }
 
 export function MessageList({ messages, isLoading, onOptionSelect }: MessageListProps) {

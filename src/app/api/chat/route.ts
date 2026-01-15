@@ -11,7 +11,7 @@ const anthropic = new Anthropic();
 const tools: Anthropic.Tool[] = [
   {
     name: "askFollowUp",
-    description: "Ask the user a follow-up question with multiple choice options to clarify their preferences. Use this to narrow down what kind of content they want (e.g., content type, recency, specificity).",
+    description: "Ask the user a follow-up question with multiple choice options. Set allowMultiple=true to let users select multiple options.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -27,6 +27,10 @@ const tools: Anthropic.Tool[] = [
             },
             required: ["label", "value"],
           },
+        },
+        allowMultiple: {
+          type: "boolean",
+          description: "If true, user can select multiple options. Default false."
         },
       },
       required: ["question", "options"],
@@ -98,14 +102,16 @@ async function executeToolCall(
   toolInput: Record<string, unknown>
 ): Promise<unknown> {
   if (toolName === "askFollowUp") {
-    const { question, options } = toolInput as {
+    const { question, options, allowMultiple } = toolInput as {
       question: string;
       options: Array<{ label: string; value: string }>;
+      allowMultiple?: boolean;
     };
     return {
       success: true,
       question,
       options,
+      allowMultiple: allowMultiple || false,
       message: "Follow-up question presented to user",
     };
   }
