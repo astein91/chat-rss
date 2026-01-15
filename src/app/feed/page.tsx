@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useFeedStore } from "@/store";
 import { NewspaperLayout } from "@/components/feed/NewspaperLayout";
 import { TopicList } from "@/components/topics/TopicList";
+import { ChatContainer } from "@/components/chat/ChatContainer";
 
 export default function FeedPage() {
   const { articles, topics, clearArticles, addArticles } = useFeedStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true);
 
   const handleRefresh = async (clear = false) => {
     const activeTopics = topics.filter((t) => t.isActive);
@@ -47,7 +49,7 @@ export default function FeedPage() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="border-b border-newspaper-border bg-white sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -74,12 +76,12 @@ export default function FeedPage() {
               >
                 ⟳ Fresh
               </button>
-              <Link
-                href="/chat"
-                className="text-newspaper-accent hover:underline font-medium"
+              <button
+                onClick={() => setIsChatOpen(!isChatOpen)}
+                className="px-3 py-1.5 text-sm border border-newspaper-border rounded-lg hover:bg-gray-50 transition-colors"
               >
-                ← Back to Chat
-              </Link>
+                {isChatOpen ? "Hide Chat" : "Show Chat"}
+              </button>
             </div>
           </div>
         </div>
@@ -87,8 +89,8 @@ export default function FeedPage() {
 
       {/* Main content */}
       <div className="flex-1 flex">
-        {/* Sidebar */}
-        <aside className="w-64 border-r border-newspaper-border bg-white p-4 hidden md:block">
+        {/* Sidebar - Topics */}
+        <aside className="w-56 border-r border-newspaper-border bg-white p-4 hidden lg:block flex-shrink-0">
           <div className="sticky top-20">
             <h2 className="font-serif font-bold text-lg text-newspaper-text mb-4">
               Your Topics
@@ -107,8 +109,8 @@ export default function FeedPage() {
         </aside>
 
         {/* Feed */}
-        <main className="flex-1 p-6">
-          <div className="max-w-5xl mx-auto">
+        <main className="flex-1 p-6 overflow-y-auto">
+          <div className="max-w-4xl mx-auto">
             {/* Date header */}
             <div className="text-center mb-8">
               <p className="text-sm text-newspaper-muted uppercase tracking-widest">
@@ -127,6 +129,23 @@ export default function FeedPage() {
             <NewspaperLayout articles={articles} topics={topics} />
           </div>
         </main>
+
+        {/* Chat Panel - Right Side */}
+        {isChatOpen && (
+          <aside className="w-96 border-l border-newspaper-border bg-gray-50 flex-shrink-0 flex flex-col">
+            <div className="p-4 border-b border-newspaper-border bg-white">
+              <h2 className="font-serif font-bold text-lg text-newspaper-text">
+                Chat Assistant
+              </h2>
+              <p className="text-xs text-newspaper-muted mt-1">
+                Tell me what you want to follow
+              </p>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <ChatContainer />
+            </div>
+          </aside>
+        )}
       </div>
     </div>
   );

@@ -19,21 +19,20 @@ export function MessageList({ messages, isLoading, onOptionSelect }: MessageList
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="text-center max-w-md">
-          <h2 className="text-2xl font-bold text-newspaper-text mb-3">
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="text-center">
+          <h2 className="text-lg font-bold text-newspaper-text mb-2">
             What interests you?
           </h2>
-          <p className="text-newspaper-muted">
-            Tell me about the topics, industries, or themes you want to stay updated on.
-            I&apos;ll help curate relevant articles just for you.
+          <p className="text-sm text-newspaper-muted mb-4">
+            Tell me what you want to follow and I&apos;ll curate your feed.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 justify-center">
-            {["AI & Machine Learning", "Climate Tech", "Startups", "Science"].map(
+          <div className="flex flex-wrap gap-2 justify-center">
+            {["AI", "Climate", "Startups", "Science"].map(
               (topic) => (
                 <span
                   key={topic}
-                  className="px-3 py-1 rounded-full text-sm bg-white border border-newspaper-border text-newspaper-muted"
+                  className="px-2.5 py-1 rounded-full text-xs bg-white border border-newspaper-border text-newspaper-muted"
                 >
                   {topic}
                 </span>
