@@ -5,6 +5,16 @@ import { ArticleCard } from "./ArticleCard";
 import { ArticleListItem } from "./ArticleListItem";
 import type { Topic, Article } from "@/types";
 
+function isValidUrl(url: string | null): boolean {
+  if (!url) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 interface NewspaperLayoutProps {
   articles: Article[];
   topics: Topic[];
@@ -52,9 +62,9 @@ export function NewspaperLayout({ articles, topics }: NewspaperLayoutProps) {
     return b.relevanceScore - a.relevanceScore;
   });
 
-  // Separate articles with and without images
-  const articlesWithImages = sortedArticles.filter((a) => a.imageUrl);
-  const articlesWithoutImages = sortedArticles.filter((a) => !a.imageUrl);
+  // Separate articles with and without valid images
+  const articlesWithImages = sortedArticles.filter((a) => isValidUrl(a.imageUrl));
+  const articlesWithoutImages = sortedArticles.filter((a) => !isValidUrl(a.imageUrl));
 
   // Hero articles (with images) - up to 3
   const heroArticles = articlesWithImages.slice(0, 3);

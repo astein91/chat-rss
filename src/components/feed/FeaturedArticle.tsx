@@ -4,11 +4,22 @@ import Image from "next/image";
 import { format } from "date-fns";
 import type { Article } from "@/types";
 
+function isValidUrl(url: string | null): boolean {
+  if (!url) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 interface FeaturedArticleProps {
   article: Article;
 }
 
 export function FeaturedArticle({ article }: FeaturedArticleProps) {
+  const hasValidImage = isValidUrl(article.imageUrl);
   const formattedDate = article.publishedDate
     ? format(new Date(article.publishedDate), "MMMM d, yyyy")
     : null;
@@ -22,9 +33,9 @@ export function FeaturedArticle({ article }: FeaturedArticleProps) {
     >
       {/* Hero image area */}
       <div className="h-64 md:h-80 bg-gray-50 relative">
-        {article.imageUrl && (
+        {hasValidImage && (
           <Image
-            src={article.imageUrl}
+            src={article.imageUrl!}
             alt={article.title}
             fill
             className="object-contain"

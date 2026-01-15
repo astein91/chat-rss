@@ -5,12 +5,23 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import type { Article } from "@/types";
 
+function isValidUrl(url: string | null): boolean {
+  if (!url) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 interface ArticleCardProps {
   article: Article;
   size?: "small" | "medium" | "large";
 }
 
 export function ArticleCard({ article, size = "medium" }: ArticleCardProps) {
+  const hasValidImage = isValidUrl(article.imageUrl);
   const formattedDate = article.publishedDate
     ? format(new Date(article.publishedDate), "MMM d, yyyy")
     : null;
@@ -26,7 +37,7 @@ export function ArticleCard({ article, size = "medium" }: ArticleCardProps) {
       )}
     >
       {/* Article image */}
-      {size !== "small" && article.imageUrl && (
+      {size !== "small" && hasValidImage && (
         <div
           className={cn(
             "relative bg-gray-50",
@@ -34,7 +45,7 @@ export function ArticleCard({ article, size = "medium" }: ArticleCardProps) {
           )}
         >
           <Image
-            src={article.imageUrl}
+            src={article.imageUrl!}
             alt={article.title}
             fill
             className="object-contain"

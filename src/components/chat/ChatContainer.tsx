@@ -107,9 +107,11 @@ export function ChatContainer() {
           }
         }
 
-        // Auto-fetch articles after topics are extracted
+        // Auto-fetch articles for ALL active topics after new topics are added
         if (newTopics.length > 0) {
-          fetchArticlesForTopics(newTopics);
+          // Get all topics from the store (including the ones we just added)
+          const allTopics = useFeedStore.getState().topics;
+          fetchArticlesForTopics(allTopics.filter(t => t.isActive));
         }
       }
     } catch (error) {
